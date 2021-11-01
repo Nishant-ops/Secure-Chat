@@ -61,14 +61,9 @@ private FirebaseAuth mfirebaseAuth;
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful())
                 {
-                    FirebaseUser user=mfirebaseAuth.getCurrentUser();
-                    if (user != null) {
-                        // Name, email address, and profile photo Url
-                        mdatabaseReference= FirebaseDatabase.getInstance().getReference("users").child(mfirebaseAuth.getUid());
-                        String name=user.getDisplayName();
                         Intent intent=new Intent(LoginActivity.this,MainActivity.class);
                            startActivity(intent);
-                       }
+
                 }
                 else{
                     Log.i(LOCATION_SERVICE,"User does not exist",task.getException());

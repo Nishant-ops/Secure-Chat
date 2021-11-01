@@ -15,6 +15,7 @@ import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.securechat.users.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -31,7 +32,7 @@ private EditText mEmail;
 private EditText mPassword;
 private TextView mRegister;
 private FirebaseAuth mfirebaseAuth;
-private DatabaseReference mdatabaseReference;
+private FirebaseDatabase firebaseDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ private DatabaseReference mdatabaseReference;
         setContentView(R.layout.activity_register);
 
         mUsername = (EditText) findViewById(R.id.Username_Register);
+       firebaseDatabase=FirebaseDatabase.getInstance();
         mEmail = (EditText) findViewById(R.id.Email_Register);
         mPassword = (EditText) findViewById(R.id.Password_Register);
         mRegister = (TextView) findViewById(R.id.Register_Register);
@@ -78,26 +80,9 @@ private DatabaseReference mdatabaseReference;
                         if(task.isSuccessful())
                         {
                             Log.i(LOCATION_SERVICE,"worked");
-                            FirebaseUser user=mfirebaseAuth.getCurrentUser();
-                            String uid=user.getUid();
-                            mdatabaseReference= FirebaseDatabase.getInstance().getReference("users").child(uid);
-                            Log.i(LOCATION_SERVICE,"issue"+uid);
-                            HashMap<String,String> map=new HashMap<>();
-                            map.put("id",uid);
-                            map.put("Username",username);
-                            mdatabaseReference.push().setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()) {
-                                        Toast.makeText(RegisterActivity.this,"Welcome Please Login to Start",Toast.LENGTH_LONG).show();
-                                        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-
-                                }
-                            });
+                           Users users=new Users(username,password,email);
+                            String uid=task.getResult().getUser().getUid();
+                            firebaseDatabase.getReference("users").child(uid).setValue(users);
 
                         }
                         else{

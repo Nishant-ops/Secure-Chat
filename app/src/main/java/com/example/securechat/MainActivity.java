@@ -28,7 +28,7 @@ ViewPager2 viewPager2;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().hide();
+        getSupportActionBar();
         mfirebaseauth = FirebaseAuth.getInstance();
         tabLayout = findViewById(R.id.tab);
         tabLayout.addTab(tabLayout.newTab().setText("Chats"), 0);
